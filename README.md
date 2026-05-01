@@ -10,6 +10,9 @@ This branch currently includes:
 - real-return calculation from adjusted close prices
 - three planned baselines
 - basic HMM parameter estimation using `hmmlearn`
+- basic Bayesian belief updates
+- a basic belief-based portfolio strategy
+- an end-to-end run script, strategy comparison table, and simple plots
 
 For full details, see:
 

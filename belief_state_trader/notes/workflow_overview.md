@@ -13,15 +13,18 @@ data sanity checks
 real-return calculation
 three planned baselines
 basic HMM parameter estimation with hmmlearn
+basic Bayesian belief updates
+basic belief-based portfolio strategy
+strategy comparison table
+simple result plots
 ```
 
 Still pending:
 
 ```text
-Bayesian belief updates
 pgmpy exploration / Bayesian network connection
-final strategy using HMM beliefs
-strategy comparison against baselines
+validation/model selection
+strategy improvement decisions
 ```
 
 ## 2. Current Workflow
@@ -43,6 +46,21 @@ run three baseline strategies
     |
     v
 fit a K=3 Gaussian HMM on training features
+    |
+    v
+run Bayesian belief updates on test observations
+    |
+    v
+convert beliefs into daily portfolio weights
+    |
+    v
+backtest the belief-based strategy
+    |
+    v
+compare all strategies
+    |
+    v
+plot equity curves and belief probabilities
     |
     v
 save summaries in results/
@@ -193,7 +211,6 @@ Files:
 ```text
 src/hmm_model.py
 scripts/05_fit_hmm.py
-notes/04_hmm_understanding.md
 ```
 
 The current HMM setup:
@@ -230,33 +247,91 @@ Learned states sorted by annualized mean return:
 | 1 | 31.3% | 6.86% | 20.69% | Sideways/moderate state |
 | 2 | 64.7% | 16.55% | 9.06% | Bull-like/lower-risk state |
 
-## 8. What Has Not Been Done Yet
+## 8. Bayesian Belief Updates
 
-Bayesian belief updates are not implemented yet.
-
-That means the current HMM can learn hidden states from the training data, but
-we have not yet used the learned HMM to update daily regime probabilities on
-the test data.
-
-Next algorithm task:
+The second algorithm task from the project note is implemented:
 
 ```text
 Implement Bayesian belief updates
 ```
 
-That step will use:
+Files:
+
+```text
+src/belief_update.py
+scripts/06_bayesian_belief_update.py
+```
+
+Output:
+
+```text
+results/test_beliefs.csv
+```
+
+The belief update uses:
 
 ```text
 HMM transition matrix
 Gaussian observation likelihoods
-new daily observations
+test-set observations
 ```
 
-to update the probability of each hidden regime over time.
+to produce daily probabilities for each hidden state.
 
-## 9. How To Run Current Scripts
+## 9. Belief-Based Portfolio Strategy
+
+The basic Bayesian strategy is implemented.
+
+Files:
+
+```text
+src/portfolio.py
+scripts/07_bayesian_strategy.py
+```
+
+Outputs:
+
+```text
+results/bayesian_strategy_summary.csv
+results/bayesian_strategy_daily.csv
+```
+
+Current test-period result:
+
+| Strategy | Total Return | Sharpe | Max Drawdown | Average Weight |
+|---|---:|---:|---:|---:|
+| Bayesian Belief-State | 31.79% | 0.615 | -14.25% | 0.611 |
+
+## 10. What Has Not Been Done Yet
+
+The end-to-end skeleton is running, but the Bayesian strategy has not been
+improved or validated yet.
+
+Completed skeleton outputs:
+
+```text
+results/strategy_comparison.csv
+results/equity_curves.png
+results/belief_probabilities.png
+```
+
+Remaining project work:
+
+```text
+explore pgmpy for Bayesian network/DBN representation
+add validation/model selection
+decide how to improve the belief update and portfolio rule
+```
+
+## 11. How To Run Current Scripts
 
 Run these from the `belief_state_trader` folder.
+
+Full end-to-end run:
+
+```text
+python scripts/run_all.py
+```
 
 Data summary:
 
@@ -278,10 +353,26 @@ HMM fitting:
 python scripts/05_fit_hmm.py
 ```
 
-## 10. Short Team Update
+Bayesian belief update and strategy:
+
+```text
+python scripts/06_bayesian_belief_update.py
+python scripts/07_bayesian_strategy.py
+```
+
+Comparison and plots:
+
+```text
+python scripts/08_strategy_comparison.py
+python scripts/09_make_plots.py
+```
+
+## 12. Short Team Update
 
 Basic HMM parameter estimation is implemented and running in the clean
 pipeline. The current HMM uses `K = 3` hidden states and the features
 `Log_Return`, `Volume`, and `Volatility`. The clean pipeline also includes
-data loading, data checks, real-return calculation, and the three planned
-baselines. The next step is Bayesian belief updates.
+data loading, data checks, real-return calculation, the three planned
+baselines, basic Bayesian belief updates, and a first belief-based strategy.
+The skeleton also creates a combined strategy comparison table and basic plots
+for equity curves and belief probabilities.
