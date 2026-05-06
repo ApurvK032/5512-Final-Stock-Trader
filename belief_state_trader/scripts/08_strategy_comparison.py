@@ -32,24 +32,35 @@ MAIN_COLUMNS = [
     "total_return",
     "annualized_return",
     "annualized_volatility",
+    "downside_volatility",
     "sharpe",
+    "sortino",
     "max_drawdown",
     "fixed_weight",
     "risk_aversion",
+    "transaction_cost_rate",
     "average_weight",
     "min_weight",
     "max_weight",
+    "average_turnover",
+    "total_transaction_cost",
+    "average_normalized_entropy",
 ]
 
 PERCENT_COLUMNS = [
     "total_return",
     "annualized_return",
     "annualized_volatility",
+    "downside_volatility",
     "max_drawdown",
     "fixed_weight",
     "average_weight",
     "min_weight",
     "max_weight",
+    "average_turnover",
+    "total_transaction_cost",
+    "transaction_cost_rate",
+    "average_normalized_entropy",
 ]
 
 
@@ -67,6 +78,10 @@ def format_for_display(df: pd.DataFrame) -> pd.DataFrame:
     if "risk_aversion" in display.columns:
         display["risk_aversion"] = display["risk_aversion"].map(
             lambda value: "" if pd.isna(value) else f"{value:.2f}"
+        )
+    if "sortino" in display.columns:
+        display["sortino"] = display["sortino"].map(
+            lambda value: "" if pd.isna(value) else f"{value:.3f}"
         )
     return display
 

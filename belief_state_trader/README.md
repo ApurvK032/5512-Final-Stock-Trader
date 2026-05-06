@@ -180,14 +180,18 @@ Current setup:
 ```text
 state return/risk estimates: learned from training data
 risk aversion: 2.0
+transaction cost rate: 0.1% per trade
 weight range: 0 to 1
 ```
 
 Current test-period result:
 
-| Strategy | Total Return | Sharpe | Max Drawdown | Average Weight |
-|---|---:|---:|---:|---:|
-| Bayesian Belief-State | 31.79% | 0.615 | -14.25% | 0.611 |
+| Strategy | Total Return | Sharpe | Sortino | Max Drawdown | Average Weight |
+|---|---:|---:|---:|---:|---:|
+| Bayesian Belief-State | 21.57% | 0.432 | 0.561 | -15.11% | 0.611 |
+
+This result includes the basic 0.1% transaction-cost assumption from the project
+proposal.
 
 Outputs:
 
@@ -316,5 +320,6 @@ The current pipeline is an end-to-end skeleton. Possible next project work:
 ```text
 explore pgmpy for Bayesian network/DBN representation
 add validation/model selection
+decide whether baselines should also include transaction-cost adjustments
 discuss how the belief update and portfolio rule should be improved
 ```

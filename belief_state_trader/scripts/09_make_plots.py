@@ -20,6 +20,10 @@ if str(PROJECT_ROOT) not in sys.path:
 from src import baselines, belief_update, data, plots, portfolio
 
 
+RISK_AVERSION = 2.0
+TRANSACTION_COST_RATE = 0.001
+
+
 def bayesian_strategy_returns():
     with open(PROJECT_ROOT / "results" / "hmm_model.pkl", "rb") as f:
         fitted = pickle.load(f)
@@ -38,8 +42,12 @@ def bayesian_strategy_returns():
 
     test_features = data.feature_matrix(test, fitted.feature_columns)
     beliefs = belief_update.filter_beliefs(test_features, fitted.model)
-    weights = portfolio.weights_from_beliefs(beliefs, state_moments, risk_aversion=2.0)
-    return portfolio.returns_from_weights(weights, test["Real_Log_Return"])
+    weights = portfolio.weights_from_beliefs(beliefs, state_moments, risk_aversion=RISK_AVERSION)
+    return portfolio.returns_from_weights(
+        weights,
+        test["Real_Log_Return"],
+        transaction_cost_rate=TRANSACTION_COST_RATE,
+    )
 
 
 def main():
