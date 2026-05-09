@@ -1,2 +1,2 @@
-strategy,start_date,end_date,n_days,total_return,annualized_return,annualized_volatility,downside_volatility,sharpe,sortino,max_drawdown,risk_aversion,transaction_cost_rate,average_weight,min_weight,max_weight,average_turnover,total_transaction_cost,average_normalized_entropy
-Bayesian Belief-State,2021-01-05,2025-12-30,1253,0.21570136217715752,0.03908135123133142,0.09052573178098076,0.06965413993121157,0.43171538591795533,0.5610772205345878,-0.15106992570413058,2.0,0.001,0.6110201397806739,0.0,1.0,0.06517284348948747,0.08172674573581729,0.09988230983252161
+strategy,start_date,end_date,n_days,total_return,annualized_return,annualized_volatility,sharpe,sortino,max_drawdown,calmar,risk_aversion,average_weight,min_weight,max_weight
+Bayesian Belief-State,2021-01-05,2025-12-30,1253,0.21570136217753455,0.03908135123139376,0.09052573178099223,0.4317153859185892,0.5610772205354507,-0.15106992570406275,0.2586970970512812,2.0,0.6110201397807918,0.0,1.0

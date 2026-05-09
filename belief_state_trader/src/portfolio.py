@@ -67,24 +67,24 @@ def weights_from_beliefs(
     return pd.Series(weights, index=beliefs.index, name="weight")
 
 
-def turnover(weights: pd.Series) -> pd.Series:
-    """Daily absolute change in portfolio exposure."""
-    return weights.diff().abs().fillna(weights.abs())
-
-
-def transaction_costs(weights: pd.Series, cost_rate: float = 0.001) -> pd.Series:
-    """Approximate transaction costs from daily turnover."""
-    return cost_rate * turnover(weights)
-
-
 def returns_from_weights(
     weights: pd.Series,
     real_log_returns: pd.Series,
-    transaction_cost_rate: float = 0.0,
+    transaction_cost_bps: float = 10.0,
 ) -> pd.Series:
-    """Apply yesterday's weight to today's return, optionally net of costs."""
+    """Apply yesterday's weight to today's return, minus transaction costs.
+
+    transaction_cost_bps: cost in basis points per unit of weight change.
+    10 bps = 0.1% per trade as specified in the project plan.
+    """
     aligned_returns = real_log_returns.reindex(weights.index)
-    strategy_returns = weights.shift(1).fillna(0.0) * aligned_returns
-    if transaction_cost_rate > 0:
-        strategy_returns = strategy_returns - transaction_costs(weights, transaction_cost_rate)
+    prev_weights = weights.shift(1).fillna(0.0)
+    gross_returns = prev_weights * aligned_returns
+
+    cost_rate = transaction_cost_bps / 10_000.0
+    weight_change = (weights - prev_weights).abs()
+    costs = weight_change * cost_rate
+
+    strategy_returns = gross_returns - costs
     return strategy_returns.dropna()
+

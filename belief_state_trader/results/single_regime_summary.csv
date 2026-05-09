@@ -1,2 +1,2 @@
-strategy,start_date,end_date,n_days,total_return,annualized_return,annualized_volatility,downside_volatility,sharpe,sortino,max_drawdown,fixed_weight
-Single-Regime No-Belief,2021-01-05,2025-12-30,1253,0.5512095256446536,0.08931014638570665,0.12090384147322147,0.08969727706729279,0.7386874171858933,0.995684030839691,-0.18883842636121728,0.7134020615384805
+strategy,start_date,end_date,n_days,total_return,annualized_return,annualized_volatility,sharpe,sortino,max_drawdown,calmar,fixed_weight
+Single-Regime No-Belief,2021-01-05,2025-12-30,1253,0.5512095256446543,0.0881540575016828,0.12088653199676729,0.7292297665056701,0.9830391321684322,-0.1888384263612174,0.4668226652824269,0.713402061538481

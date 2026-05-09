@@ -28,14 +28,6 @@ def annualized_volatility(log_returns: pd.Series) -> float:
     return float(log_returns.std(ddof=1) * np.sqrt(TRADING_DAYS_PER_YEAR))
 
 
-def downside_volatility(log_returns: pd.Series) -> float:
-    """Annualized downside volatility from negative daily log returns."""
-    negative_returns = log_returns[log_returns < 0]
-    if len(negative_returns) < 2:
-        return 0.0
-    return float(negative_returns.std(ddof=1) * np.sqrt(TRADING_DAYS_PER_YEAR))
-
-
 def sharpe_ratio(log_returns: pd.Series) -> float:
     """Simple Sharpe ratio with zero risk-free rate."""
     vol = log_returns.std(ddof=1)
@@ -45,11 +37,11 @@ def sharpe_ratio(log_returns: pd.Series) -> float:
 
 
 def sortino_ratio(log_returns: pd.Series) -> float:
-    """Simple Sortino ratio with zero target return."""
-    negative_returns = log_returns[log_returns < 0]
-    if len(negative_returns) < 2:
+    """Sortino ratio: mean return / downside deviation (annualized, zero target)."""
+    downside = log_returns[log_returns < 0]
+    if len(downside) < 2:
         return 0.0
-    downside_std = negative_returns.std(ddof=1)
+    downside_std = downside.std(ddof=1)
     if downside_std == 0:
         return 0.0
     return float(log_returns.mean() / downside_std * np.sqrt(TRADING_DAYS_PER_YEAR))
@@ -60,6 +52,15 @@ def max_drawdown(equity: pd.Series) -> float:
     running_max = equity.cummax()
     drawdown = equity / running_max - 1.0
     return float(drawdown.min())
+
+
+def calmar_ratio(log_returns: pd.Series) -> float:
+    """Annualized return divided by absolute max drawdown."""
+    eq = equity_curve(log_returns)
+    mdd = max_drawdown(eq)
+    if mdd == 0:
+        return 0.0
+    return float(annualized_return(log_returns) / abs(mdd))
 
 
 def summarize_backtest(name: str, log_returns: pd.Series) -> dict:
@@ -73,8 +74,8 @@ def summarize_backtest(name: str, log_returns: pd.Series) -> dict:
         "total_return": total_return(eq),
         "annualized_return": annualized_return(log_returns),
         "annualized_volatility": annualized_volatility(log_returns),
-        "downside_volatility": downside_volatility(log_returns),
         "sharpe": sharpe_ratio(log_returns),
         "sortino": sortino_ratio(log_returns),
         "max_drawdown": max_drawdown(eq),
+        "calmar": calmar_ratio(log_returns),
     }

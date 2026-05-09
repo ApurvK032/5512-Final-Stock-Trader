@@ -92,3 +92,47 @@ def transition_matrix_frame(fitted: FittedHMM) -> pd.DataFrame:
     """Return the learned transition matrix as a labeled DataFrame."""
     labels = [f"state_{i}" for i in range(fitted.model.n_components)]
     return pd.DataFrame(fitted.model.transmat_, index=labels, columns=labels)
+
+
+def hmm_n_free_params(n_states: int, n_features: int) -> int:
+    """Count free parameters in a full-covariance Gaussian HMM."""
+    start_probs = n_states - 1
+    transitions = n_states * (n_states - 1)
+    means = n_states * n_features
+    covariances = n_states * n_features * (n_features + 1) // 2
+    return start_probs + transitions + means + covariances
+
+
+def compute_bic_aic(fitted: FittedHMM, n_observations: int) -> dict:
+    """Compute BIC and AIC for a fitted HMM."""
+    n_features = len(fitted.feature_columns)
+    k = hmm_n_free_params(fitted.model.n_components, n_features)
+    ll = fitted.log_likelihood
+    bic = -2 * ll + k * np.log(n_observations)
+    aic = -2 * ll + 2 * k
+    return {
+        "n_states": fitted.model.n_components,
+        "n_params": k,
+        "log_likelihood": ll,
+        "bic": float(bic),
+        "aic": float(aic),
+    }
+
+
+def model_selection_sweep(
+    features: pd.DataFrame,
+    k_range: range = range(2, 6),
+    n_seeds: int = 10,
+    base_seed: int = 42,
+    n_iter: int = 200,
+) -> pd.DataFrame:
+    """Fit HMMs for each K in k_range, return BIC/AIC comparison table."""
+    n_obs = len(features)
+    rows = []
+    for k in k_range:
+        fitted = fit_gaussian_hmm(features, n_states=k, n_seeds=n_seeds,
+                                  base_seed=base_seed, n_iter=n_iter)
+        info = compute_bic_aic(fitted, n_obs)
+        info["best_seed"] = fitted.best_seed
+        rows.append(info)
+    return pd.DataFrame(rows)
