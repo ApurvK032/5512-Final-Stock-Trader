@@ -15,9 +15,6 @@ three planned baselines
 basic HMM parameter estimation with hmmlearn
 basic Bayesian belief updates
 basic belief-based portfolio strategy
-Sortino and downside-risk metrics
-belief entropy measurement
-Bayesian strategy transaction-cost accounting
 strategy comparison table
 simple result plots
 ```
@@ -55,9 +52,6 @@ run Bayesian belief updates on test observations
     |
     v
 convert beliefs into daily portfolio weights
-    |
-    v
-apply turnover and transaction-cost accounting
     |
     v
 backtest the belief-based strategy
@@ -265,7 +259,7 @@ Files:
 
 ```text
 src/belief_update.py
-scripts/06_bayesian_belief_update.py
+scripts/06_bayesian_belief.py
 ```
 
 Output:
@@ -282,8 +276,7 @@ Gaussian observation likelihoods
 test-set observations
 ```
 
-to produce daily probabilities for each hidden state. The output also includes
-belief entropy and normalized entropy, which measure how uncertain the belief is.
+to produce daily probabilities for each hidden state.
 
 ## 9. Belief-Based Portfolio Strategy
 
@@ -305,11 +298,9 @@ results/bayesian_strategy_daily.csv
 
 Current test-period result:
 
-| Strategy | Total Return | Sharpe | Sortino | Max Drawdown | Average Weight |
-|---|---:|---:|---:|---:|---:|
-| Bayesian Belief-State | 21.57% | 0.432 | 0.561 | -15.11% | 0.611 |
-
-This includes the basic 0.1% transaction-cost assumption from the proposal.
+| Strategy | Total Return | Sharpe | Max Drawdown | Average Weight |
+|---|---:|---:|---:|---:|
+| Bayesian Belief-State | 31.79% | 0.615 | -14.25% | 0.611 |
 
 ## 10. What Has Not Been Done Yet
 
@@ -329,7 +320,6 @@ Remaining project work:
 ```text
 explore pgmpy for Bayesian network/DBN representation
 add validation/model selection
-decide whether transaction costs should also be applied to every baseline
 decide how to improve the belief update and portfolio rule
 ```
 
@@ -366,7 +356,7 @@ python scripts/05_fit_hmm.py
 Bayesian belief update and strategy:
 
 ```text
-python scripts/06_bayesian_belief_update.py
+python scripts/06_bayesian_belief.py
 python scripts/07_bayesian_strategy.py
 ```
 
@@ -374,7 +364,12 @@ Comparison and plots:
 
 ```text
 python scripts/08_strategy_comparison.py
-python scripts/09_make_plots.py
+python scripts/09_regime_and_calibration.py
+python scripts/10_ablation_studies.py
+python scripts/11_pgmpy_dbn.py
+python scripts/11a_pgmpy_exploration.py
+python scripts/12_all_plots.py
+python scripts/13_enhanced_agent.py
 ```
 
 ## 12. Short Team Update

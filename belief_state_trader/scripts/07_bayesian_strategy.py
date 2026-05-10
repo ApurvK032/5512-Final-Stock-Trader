@@ -1,4 +1,13 @@
-"""Run a basic belief-based portfolio strategy on the test split.
+"""Backtest the baseline Bayesian belief-state portfolio strategy on test data.
+
+Loads a fitted HMM, estimates per-state return moments from the
+training split, computes daily posterior regime beliefs on the test split, and
+maps those beliefs to portfolio weights via a mean-variance style allocation
+rule with fixed risk aversion.
+
+Generated outputs:
+- results/bayesian_strategy_summary.csv: aggregate performance metrics
+- results/bayesian_strategy_daily.csv: daily weights and strategy returns
 
 Run from the belief_state_trader folder:
 
@@ -20,10 +29,6 @@ if str(PROJECT_ROOT) not in sys.path:
 from src import backtest, belief_update, data, portfolio
 
 
-RISK_AVERSION = 2.0
-TRANSACTION_COST_RATE = 0.001
-
-
 def main():
     with open(PROJECT_ROOT / "results" / "hmm_model.pkl", "rb") as f:
         fitted = pickle.load(f)
@@ -42,26 +47,14 @@ def main():
 
     test_features = data.feature_matrix(test, fitted.feature_columns)
     beliefs = belief_update.filter_beliefs(test_features, fitted.model)
-    weights = portfolio.weights_from_beliefs(beliefs, state_moments, risk_aversion=RISK_AVERSION)
-    gross_strategy_returns = portfolio.returns_from_weights(weights, test["Real_Log_Return"])
-    transaction_costs = portfolio.transaction_costs(weights, TRANSACTION_COST_RATE)
-    strategy_returns = portfolio.returns_from_weights(
-        weights,
-        test["Real_Log_Return"],
-        transaction_cost_rate=TRANSACTION_COST_RATE,
-    )
+    weights = portfolio.weights_from_beliefs(beliefs, state_moments, risk_aversion=2.0)
+    strategy_returns = portfolio.returns_from_weights(weights, test["Real_Log_Return"])
 
     summary = backtest.summarize_backtest("Bayesian Belief-State", strategy_returns)
-    summary["risk_aversion"] = RISK_AVERSION
-    summary["transaction_cost_rate"] = TRANSACTION_COST_RATE
+    summary["risk_aversion"] = 2.0
     summary["average_weight"] = float(weights.mean())
     summary["min_weight"] = float(weights.min())
     summary["max_weight"] = float(weights.max())
-    summary["average_turnover"] = float(portfolio.turnover(weights).mean())
-    summary["total_transaction_cost"] = float(
-        transaction_costs.reindex(strategy_returns.index).fillna(0.0).sum()
-    )
-    summary["average_normalized_entropy"] = float(beliefs["normalized_entropy"].mean())
 
     summary_df = pd.DataFrame([summary])
     summary_path = PROJECT_ROOT / "results" / "bayesian_strategy_summary.csv"
@@ -72,12 +65,9 @@ def main():
         {
             "Date": weights.index,
             "weight": weights.to_numpy(),
-            "turnover": portfolio.turnover(weights).to_numpy(),
-            "transaction_cost": transaction_costs.to_numpy(),
-            "gross_strategy_log_return": gross_strategy_returns.reindex(weights.index).to_numpy(),
-            "strategy_log_return": strategy_returns.reindex(weights.index).to_numpy(),
-            "belief_entropy": beliefs["belief_entropy"].to_numpy(),
-            "normalized_entropy": beliefs["normalized_entropy"].to_numpy(),
+            "strategy_log_return": (
+                weights.shift(1).fillna(0.0) * test["Real_Log_Return"].reindex(weights.index)
+            ).to_numpy(),
         }
     ).to_csv(daily_path, index=False)
 
@@ -90,3 +80,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

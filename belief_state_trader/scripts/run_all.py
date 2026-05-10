@@ -19,10 +19,15 @@ SCRIPT_ORDER = [
     "03_moving_average_baseline.py",
     "04_single_regime_baseline.py",
     "05_fit_hmm.py",
-    "06_bayesian_belief_update.py",
+    "05a_model_selection.py",
+    "06_bayesian_belief.py",
     "07_bayesian_strategy.py",
     "08_strategy_comparison.py",
-    "09_make_plots.py",
+    "09_regime_and_calibration.py",
+    "10_ablation_studies.py",
+    "11_pgmpy_dbn.py",
+    "12_all_plots.py",
+    "13_enhanced_agent.py",
 ]
 
 

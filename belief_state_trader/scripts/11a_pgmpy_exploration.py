@@ -18,7 +18,7 @@ results/dbn_discrete_beliefs.csv   -- raw discrete-filter belief matrix
 
 Run from the belief_state_trader folder:
 
-    python scripts/11_pgmpy_exploration.py
+    python scripts/11a_pgmpy_exploration.py
 """
 from __future__ import annotations
 

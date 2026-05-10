@@ -101,7 +101,7 @@ Current test-period results:
 | Strategy | Total Return | Sharpe | Max Drawdown |
 |---|---:|---:|---:|
 | Buy and Hold | 85.04% | 0.739 | -25.43% |
-| Moving Average Crossover 50/200 | 33.86% | 0.486 | -19.74% |
+| Moving Average Crossover 50/200 | 33.19% | 0.477 | -19.90% |
 | Single-Regime No-Belief | 55.12% | 0.739 | -18.88% |
 
 ## HMM Parameter Estimation
@@ -180,18 +180,14 @@ Current setup:
 ```text
 state return/risk estimates: learned from training data
 risk aversion: 2.0
-transaction cost rate: 0.1% per trade
 weight range: 0 to 1
 ```
 
 Current test-period result:
 
-| Strategy | Total Return | Sharpe | Sortino | Max Drawdown | Average Weight |
-|---|---:|---:|---:|---:|---:|
-| Bayesian Belief-State | 21.57% | 0.432 | 0.561 | -15.11% | 0.611 |
-
-This result includes the basic 0.1% transaction-cost assumption from the project
-proposal.
+| Strategy | Total Return | Sharpe | Max Drawdown | Average Weight |
+|---|---:|---:|---:|---:|
+| Bayesian Belief-State | 21.57% | 0.432 | -15.11% | 0.611 |
 
 Outputs:
 
@@ -247,7 +243,7 @@ python scripts/05_fit_hmm.py
 Bayesian belief update and strategy:
 
 ```bash
-python scripts/06_bayesian_belief_update.py
+python scripts/06_bayesian_belief.py
 python scripts/07_bayesian_strategy.py
 ```
 
@@ -255,7 +251,12 @@ Comparison and plots:
 
 ```bash
 python scripts/08_strategy_comparison.py
-python scripts/09_make_plots.py
+python scripts/09_regime_and_calibration.py
+python scripts/10_ablation_studies.py
+python scripts/11_pgmpy_dbn.py
+python scripts/11a_pgmpy_exploration.py
+python scripts/12_all_plots.py
+python scripts/13_enhanced_agent.py
 ```
 
 ## Main Files
@@ -280,10 +281,15 @@ scripts/02_buy_hold_baseline.py
 scripts/03_moving_average_baseline.py
 scripts/04_single_regime_baseline.py
 scripts/05_fit_hmm.py
-scripts/06_bayesian_belief_update.py
+scripts/06_bayesian_belief.py
 scripts/07_bayesian_strategy.py
 scripts/08_strategy_comparison.py
-scripts/09_make_plots.py
+scripts/09_regime_and_calibration.py
+scripts/10_ablation_studies.py
+scripts/11_pgmpy_dbn.py
+scripts/11a_pgmpy_exploration.py
+scripts/12_all_plots.py
+scripts/13_enhanced_agent.py
 scripts/run_all.py
 ```
 
@@ -311,15 +317,4 @@ Start here for the team-facing explanation:
 
 ```text
 notes/workflow_overview.md
-```
-
-## Next Step
-
-The current pipeline is an end-to-end skeleton. Possible next project work:
-
-```text
-explore pgmpy for Bayesian network/DBN representation
-add validation/model selection
-decide whether baselines should also include transaction-cost adjustments
-discuss how the belief update and portfolio rule should be improved
 ```
