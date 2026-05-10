@@ -30,6 +30,7 @@ def fit_gaussian_hmm(
     best_model = None
     best_log_likelihood = -np.inf
     best_seed = base_seed
+    failed_seeds: list[tuple[int, str]] = []
 
     for offset in range(n_seeds):
         seed = base_seed + offset
@@ -39,8 +40,14 @@ def fit_gaussian_hmm(
             n_iter=n_iter,
             random_state=seed,
         )
-        model.fit(X)
-        log_likelihood = float(model.score(X))
+        try:
+            model.fit(X)
+            log_likelihood = float(model.score(X))
+        except (ValueError, FloatingPointError, np.linalg.LinAlgError) as exc:
+            # Some random restarts can become numerically unstable.
+            # Skip failed seeds and keep searching for a valid fit.
+            failed_seeds.append((seed, str(exc)))
+            continue
 
         if log_likelihood > best_log_likelihood:
             best_model = model
@@ -48,7 +55,11 @@ def fit_gaussian_hmm(
             best_seed = seed
 
     if best_model is None:
-        raise RuntimeError("HMM fitting failed for all random seeds.")
+        details = "; ".join(f"seed {seed}: {msg}" for seed, msg in failed_seeds)
+        raise RuntimeError(
+            "HMM fitting failed for all random seeds. "
+            f"n_states={n_states}, tried={n_seeds}, failures={details}"
+        )
 
     return FittedHMM(
         model=best_model,

@@ -80,17 +80,23 @@ def main() -> None:
     print(f"Max EM iterations     : {N_ITER}\n")
 
     rows: list[dict] = []
+    failed_k: list[tuple[int, str]] = []
 
     for k in K_RANGE:
         print(f"Fitting K={k} ... ", end="", flush=True)
 
-        fitted = hmm_model.fit_gaussian_hmm(
-            features=features,
-            n_states=k,
-            n_seeds=N_SEEDS,
-            base_seed=BASE_SEED,
-            n_iter=N_ITER,
-        )
+        try:
+            fitted = hmm_model.fit_gaussian_hmm(
+                features=features,
+                n_states=k,
+                n_seeds=N_SEEDS,
+                base_seed=BASE_SEED,
+                n_iter=N_ITER,
+            )
+        except RuntimeError as exc:
+            failed_k.append((k, str(exc)))
+            print(f"skipped ({exc})")
+            continue
 
         log_likelihood = fitted.log_likelihood
         n_params = count_free_params(k, n_features)
@@ -124,6 +130,13 @@ def main() -> None:
             f"[{state_frequencies}]"
         )
 
+    if not rows:
+        details = "; ".join(f"K={k}: {msg}" for k, msg in failed_k)
+        raise RuntimeError(
+            "Model selection failed: all tested K values failed to fit. "
+            f"Details: {details}"
+        )
+
     results = pd.DataFrame(rows)
 
     csv_path = results_dir / "model_selection.csv"
@@ -147,6 +160,11 @@ def main() -> None:
 
     print(f"\nBest K by AIC: {int(best_aic_row['n_states'])}")
     print(f"Best K by BIC: {int(best_bic_row['n_states'])}")
+
+    if failed_k:
+        print("\nSkipped K values due to numerical fit failures:")
+        for k, reason in failed_k:
+            print(f"- K={k}: {reason}")
 
     print(
         "\nInterpretation note:\n"

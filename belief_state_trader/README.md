@@ -101,7 +101,7 @@ Current test-period results:
 | Strategy | Total Return | Sharpe | Max Drawdown |
 |---|---:|---:|---:|
 | Buy and Hold | 85.04% | 0.739 | -25.43% |
-| Moving Average Crossover 50/200 | 33.86% | 0.486 | -19.74% |
+| Moving Average Crossover 50/200 | 33.19% | 0.477 | -19.90% |
 | Single-Regime No-Belief | 55.12% | 0.739 | -18.88% |
 
 ## HMM Parameter Estimation
@@ -187,7 +187,7 @@ Current test-period result:
 
 | Strategy | Total Return | Sharpe | Max Drawdown | Average Weight |
 |---|---:|---:|---:|---:|
-| Bayesian Belief-State | 31.79% | 0.615 | -14.25% | 0.611 |
+| Bayesian Belief-State | 21.57% | 0.432 | -15.11% | 0.611 |
 
 Outputs:
 

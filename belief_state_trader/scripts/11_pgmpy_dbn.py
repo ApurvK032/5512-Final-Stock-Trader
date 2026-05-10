@@ -38,10 +38,24 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src import backtest, belief_update, data, dbn_model, portfolio
+from src import backtest, belief_update, data, portfolio
+
+try:
+    from src import dbn_model
+    DBN_AVAILABLE = True
+except ModuleNotFoundError as exc:
+    if exc.name == "pgmpy" or exc.name.startswith("pgmpy."):
+        DBN_AVAILABLE = False
+    else:
+        raise
 
 
 def main():
+    if not DBN_AVAILABLE:
+        print("pgmpy is not installed; skipping 11_pgmpy_dbn.py.")
+        print("Install with: pip install pgmpy")
+        return
+
     results_dir = PROJECT_ROOT / "results"
 
     with open(results_dir / "hmm_model.pkl", "rb") as f:
