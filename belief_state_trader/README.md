@@ -318,13 +318,3 @@ Start here for the team-facing explanation:
 ```text
 notes/workflow_overview.md
 ```
-
-## Next Step
-
-The current pipeline is an end-to-end skeleton. Possible next project work:
-
-```text
-explore pgmpy for Bayesian network/DBN representation
-add validation/model selection
-discuss how the belief update and portfolio rule should be improved
-```
