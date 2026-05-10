@@ -1,4 +1,21 @@
-"""Fit a basic Gaussian HMM on the training split.
+"""Train the baseline Gaussian HMM used for regime inference in the pipeline.
+
+This script fits a K=3 Gaussian HMM on training-set features and persists the
+fitted model plus diagnostic summaries for downstream belief updates and
+strategy construction.
+
+Training setup:
+- data split: training only
+- features: default feature matrix from src.data
+- model class: Gaussian HMM (via src.hmm_model)
+- hidden states: 3
+- random-seed sweep: 10 seeds, best log-likelihood retained
+
+Generated outputs:
+- results/hmm_model.pkl: serialized fitted model artifact
+- results/hmm_state_summary.csv: decoded state statistics
+- results/hmm_transition_matrix.csv: estimated transition probabilities
+- results/hmm_training_summary.txt: human-readable training report
 
 Run from the belief_state_trader folder:
 

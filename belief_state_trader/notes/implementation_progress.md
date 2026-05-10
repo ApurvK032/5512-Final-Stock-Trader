@@ -117,7 +117,7 @@ agent recognizes regime uncertainty during sudden market dislocations.
 
 Files added:
 - `src/evaluation.py`
-- `scripts/10_regime_and_calibration.py`
+- `scripts/09_regime_and_calibration.py`
 
 Outputs:
 - `results/crisis_periods_drawdown.csv`
@@ -157,7 +157,7 @@ variance. Additional entropy scaling is redundant.
 
 Files added:
 - `src/ablations.py`
-- `scripts/11_ablation_studies.py`
+- `scripts/10_ablation_studies.py`
 
 Outputs:
 - `results/ablation_risk_aversion.csv`
@@ -189,7 +189,7 @@ framework — useful for future extensions like adding more parents or children.
 
 Files added:
 - `src/dbn_model.py`
-- `scripts/12_pgmpy_dbn.py`
+- `scripts/11_pgmpy_dbn.py`
 
 Outputs:
 - `results/dbn_structure.json`
@@ -219,7 +219,7 @@ Files modified:
 - `src/plots.py` — complete rewrite with 8 plot functions
 
 Files added:
-- `scripts/13_all_plots.py`
+- `scripts/12_all_plots.py`
 
 ---
 
@@ -259,7 +259,7 @@ Enhanced agent beats Buy & Hold on ALL risk-adjusted metrics.
 Files added:
 - `src/enhanced_agent.py` — fit_enhanced_hmm(), bear_defense_weights(), run_bear_defense_agent(),
   regime_switch_weights(), run_regime_switch_agent(), full_sweep()
-- `scripts/14_enhanced_agent.py` — sweep + comparison + plots
+- `scripts/13_enhanced_agent.py` — sweep + comparison + plots
 
 Outputs:
 - `results/enhanced_agent_sweep.csv` — all 17 configs
@@ -286,14 +286,15 @@ python scripts/03_moving_average_baseline.py  # Baseline 2
 python scripts/04_single_regime_baseline.py   # Baseline 3
 python scripts/05_fit_hmm.py               # HMM training
 python scripts/05a_model_selection.py      # BIC/AIC sweep
-python scripts/06_bayesian_belief_update.py   # Belief filtering
+python scripts/06_bayesian_belief.py      # Belief filtering
 python scripts/07_bayesian_strategy.py     # Bayesian strategy backtest
 python scripts/08_strategy_comparison.py   # Comparison table
-python scripts/10_regime_and_calibration.py   # Regime + calibration analysis
-python scripts/11_ablation_studies.py      # All ablations
-python scripts/12_pgmpy_dbn.py             # pgmpy DBN comparison
-python scripts/13_all_plots.py             # Generate all plots
-python scripts/14_enhanced_agent.py        # Enhanced agent sweep + comparison
+python scripts/09_regime_and_calibration.py   # Regime + calibration analysis
+python scripts/10_ablation_studies.py      # All ablations
+python scripts/11_pgmpy_dbn.py             # pgmpy DBN comparison
+python scripts/11a_pgmpy_exploration.py    # pgmpy exploration cross-check
+python scripts/12_all_plots.py             # Generate all plots
+python scripts/13_enhanced_agent.py        # Enhanced agent sweep + comparison
 ```
 
 ---

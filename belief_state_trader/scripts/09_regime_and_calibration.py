@@ -1,8 +1,32 @@
-"""Regime detection, belief calibration, and transition period analysis.
+"""Evaluate regime quality, belief calibration, and period-specific performance.
+
+This script is an evaluation layer on top of the fitted HMM and Bayesian belief
+pipeline. It measures whether inferred regimes align with stress periods,
+whether belief probabilities are calibrated to realized returns, and how
+different strategies behave across market conditions.
+
+Main analyses:
+1. Drawdown-based crisis detection from test-period prices.
+2. Manual event labeling and date-to-period assignment.
+3. Regime detection accuracy for the inferred bear state.
+4. Belief calibration diagnostics against realized returns.
+5. Strategy performance by labeled period (transition-aware comparison).
+6. Belief entropy behavior across periods (uncertainty analysis).
+
+Required inputs:
+- results/hmm_model.pkl
+- train/test data loaded via src.data
+
+Generated outputs:
+- results/crisis_periods_drawdown.csv
+- results/regime_detection_accuracy.csv
+- results/belief_calibration.csv
+- results/performance_by_period.csv
+- results/entropy_by_period.csv
 
 Run from the belief_state_trader folder:
 
-    python scripts/10_regime_and_calibration.py
+    python scripts/09_regime_and_calibration.py
 """
 from __future__ import annotations
 

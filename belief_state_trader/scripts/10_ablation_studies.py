@@ -1,8 +1,29 @@
-"""Run all ablation studies.
+"""Run ablation studies for the Bayesian regime-based trading pipeline.
+
+This script evaluates how sensitive strategy performance is to key modeling and
+allocation choices. It reuses the fitted HMM artifact and executes three
+experiment groups on the train/test split:
+
+1. Risk-aversion sweep:
+    Varies the portfolio risk-aversion parameter to measure how aggressiveness
+    affects return, risk, and average exposure.
+
+2. Feature-subset ablations:
+    Re-runs the HMM/strategy flow with different feature sets to test which
+    inputs contribute most to predictive quality and downstream performance.
+
+3. Entropy-aware sizing ablation:
+    Compares baseline sizing against belief-entropy-aware variants to assess
+    whether uncertainty-aware position scaling improves robustness.
+
+Generated outputs:
+- results/ablation_risk_aversion.csv
+- results/ablation_features.csv
+- results/ablation_entropy.csv
 
 Run from the belief_state_trader folder:
 
-    python scripts/11_ablation_studies.py
+    python scripts/10_ablation_studies.py
 """
 from __future__ import annotations
 

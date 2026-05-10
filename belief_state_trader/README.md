@@ -243,7 +243,7 @@ python scripts/05_fit_hmm.py
 Bayesian belief update and strategy:
 
 ```bash
-python scripts/06_bayesian_belief_update.py
+python scripts/06_bayesian_belief.py
 python scripts/07_bayesian_strategy.py
 ```
 
@@ -251,7 +251,12 @@ Comparison and plots:
 
 ```bash
 python scripts/08_strategy_comparison.py
-python scripts/09_make_plots.py
+python scripts/09_regime_and_calibration.py
+python scripts/10_ablation_studies.py
+python scripts/11_pgmpy_dbn.py
+python scripts/11a_pgmpy_exploration.py
+python scripts/12_all_plots.py
+python scripts/13_enhanced_agent.py
 ```
 
 ## Main Files
@@ -276,10 +281,15 @@ scripts/02_buy_hold_baseline.py
 scripts/03_moving_average_baseline.py
 scripts/04_single_regime_baseline.py
 scripts/05_fit_hmm.py
-scripts/06_bayesian_belief_update.py
+scripts/06_bayesian_belief.py
 scripts/07_bayesian_strategy.py
 scripts/08_strategy_comparison.py
-scripts/09_make_plots.py
+scripts/09_regime_and_calibration.py
+scripts/10_ablation_studies.py
+scripts/11_pgmpy_dbn.py
+scripts/11a_pgmpy_exploration.py
+scripts/12_all_plots.py
+scripts/13_enhanced_agent.py
 scripts/run_all.py
 ```
 
