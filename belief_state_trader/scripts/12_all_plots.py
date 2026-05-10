@@ -1,6 +1,6 @@
 """Generate the consolidated figure set used in the final report workflow.
 
-This script rebuilds baseline and Bayesian strategy return series, loads event
+This script reconstructs baseline and Bayesian strategy return series, loads event
 annotations, and produces publication-ready plots from previously generated
 artifacts in results/. It is designed as a post-processing visualization step
 after model fitting, belief updates, strategy evaluation, and (optionally)
