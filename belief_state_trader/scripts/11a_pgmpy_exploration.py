@@ -1,25 +1,4 @@
-"""Explore the HMM as a Dynamic Bayesian Network using pgmpy.
-
-This script does two things:
-
-1. Constructs the equivalent DBN structure in pgmpy, showing how the HMM
-   maps to a two-slice temporal Bayesian network (2-TBN):
-       Regime_{t-1}  ->  Regime_t   (transition)
-       Regime_t      ->  Obs_t      (emission, discretised)
-
-2. Runs a discrete forward filter as a cross-check against the Gaussian
-   filter in src/belief_update.py.  Observations are discretised into
-   N_BINS quantile bins using training-set thresholds to avoid leakage.
-
-Outputs
--------
-results/dbn_belief_comparison.csv  -- per-state Pearson r and mean |diff|
-results/dbn_discrete_beliefs.csv   -- raw discrete-filter belief matrix
-
-Run from the belief_state_trader folder:
-
-    python scripts/11a_pgmpy_exploration.py
-"""
+"""Explore a discrete pgmpy DBN view of the fitted HMM."""
 from __future__ import annotations
 
 import pickle
@@ -54,12 +33,7 @@ N_BINS = 5   # quantile bins for observation discretisation
 # ---------------------------------------------------------------------------
 
 def build_dbn_from_hmm(fitted: "hmm_model.FittedHMM", emit: np.ndarray, n_bins: int):
-    """Return a pgmpy DynamicBayesianNetwork with CPDs from the fitted HMM.
-
-    Topology (pgmpy (variable, time_slice) convention):
-        ("Regime", 0) -> ("Regime", 1)   intra-slice Markov transition
-        ("Regime", 1) -> ("Obs", 1)      discretised emission
-    """
+    """Build a two-slice DBN from fitted HMM parameters."""
     n_states = fitted.model.n_components
     trans = fitted.model.transmat_   # (K, K)
 
@@ -102,7 +76,7 @@ def estimate_emit_matrix(
     n_states: int,
     n_bins: int,
 ) -> np.ndarray:
-    """Estimate P(obs_bin | state) with Laplace smoothing.  Returns (K, n_bins)."""
+    """Estimate P(obs_bin | state) with Laplace smoothing."""
     emit = np.ones((n_states, n_bins))   # add-1 prior
     for s in range(n_states):
         for b in range(n_bins):
@@ -116,7 +90,7 @@ def discrete_forward_filter(
     trans: np.ndarray,
     emit: np.ndarray,
 ) -> np.ndarray:
-    """Standard discrete HMM forward (filtering) pass.  Returns (T, K)."""
+    """Run a discrete HMM forward pass."""
     n_states = trans.shape[0]
     T = len(obs_bins)
     beliefs = np.empty((T, n_states))

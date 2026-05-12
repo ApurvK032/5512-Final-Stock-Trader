@@ -1,9 +1,4 @@
-"""Run the Moving Average Crossover baseline on the test split.
-
-Run from the belief_state_trader folder:
-
-    python scripts/03_moving_average_baseline.py
-"""
+"""Run the Moving Average Crossover baseline."""
 from __future__ import annotations
 
 import sys

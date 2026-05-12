@@ -1,32 +1,4 @@
-"""Generate the consolidated figure set used in the final report workflow.
-
-This script reconstructs baseline and Bayesian strategy return series, loads event
-annotations, and produces publication-ready plots from previously generated
-artifacts in results/. It is designed as a post-processing visualization step
-after model fitting, belief updates, strategy evaluation, and (optionally)
-ablation/model-selection analyses.
-
-Required inputs:
-- results/hmm_model.pkl
-- results/test_beliefs.csv
-- train/test CSVs loaded via src.data helpers
-
-Always generated plots:
-- results/equity_curves.png
-- results/belief_probabilities.png
-- results/entropy_and_weights.png
-- results/drawdown_comparison.png
-
-Conditionally generated plots (only if source CSV exists):
-- results/model_selection_detailed.png from results/model_selection.csv
-- results/ablation_risk_aversion.png from results/ablation_risk_aversion.csv
-- results/calibration_plot.png from results/belief_calibration.csv
-- results/ablation_features.png from results/ablation_features.csv
-
-Run from the belief_state_trader folder:
-
-    python scripts/12_all_plots.py
-"""
+"""Generate report plots from pipeline outputs."""
 from __future__ import annotations
 
 import pickle

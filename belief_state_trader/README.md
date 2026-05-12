@@ -95,6 +95,7 @@ python -m pip install -r requirements.txt
 | `12_all_plots.py` | Generate report-ready plots |
 | `13_enhanced_agent.py` | Enhanced bear-defense strategy experiments |
 | `14_validate_enhanced_strategy.py` | Validation-selected enhanced strategy and held-out check |
+| `15_bootstrap_confidence_intervals.py` | Bootstrap Sharpe confidence intervals for held-out returns |
 | `run_all.py` | Runs the full pipeline in order |
 
 ## Reusable Modules
@@ -137,6 +138,7 @@ Important generated files:
 ```text
 results/strategy_comparison.csv
 results/enhanced_validation_comparison.csv
+results/bootstrap_sharpe_ci.csv
 results/model_selection.csv
 results/ablation_features.csv
 results/ablation_entropy.csv
@@ -152,10 +154,9 @@ results/model_selection.png
 results/calibration_plot.png
 ```
 
-Final report:
+Final report PDF:
 
 ```text
-reports/belief_state_trader_group2_report.tex
 reports/belief_state_trader_group2_report.pdf
 ```
 
