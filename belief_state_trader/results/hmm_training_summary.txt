@@ -1,0 +1,19 @@
+Gaussian HMM training summary
+=============================
+training rows: 1511
+feature columns: ['Log_Return', 'Volume', 'Volatility']
+n_states: 3
+best_seed: 42
+training_log_likelihood: -3497.4771
+
+State summary sorted by annualized mean return:
+ state  n_days  state_frequency  mean_real_log_return  annualized_mean_return  annualized_volatility
+     0      60         0.039735             -0.002812               -0.708675               0.647138
+     1     473         0.313245              0.000272                0.068563               0.206850
+     2     977         0.647020              0.000657                0.165485               0.090583
+
+Transition matrix:
+         state_0  state_1  state_2
+state_0   0.8519   0.1021   0.0461
+state_1   0.0117   0.9668   0.0216
+state_2   0.0040   0.0084   0.9876

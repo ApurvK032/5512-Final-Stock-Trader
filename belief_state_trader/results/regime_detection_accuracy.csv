@@ -1,0 +1,2 @@
+true_positives,false_positives,false_negatives,true_negatives,precision,recall,f1,avg_bear_prob_during_crisis,avg_bear_prob_during_normal
+20,80,269,885,0.2,0.06920415224913495,0.10282776349614396,0.0757517147188095,0.08485952397574072

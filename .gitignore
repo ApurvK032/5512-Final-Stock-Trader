@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+
+# Local review / agent artifacts
+AGENTS.md
+AGENT_LOG.md
+belief_state_trader/reports/layout_check_page-*.png
+belief_state_trader/reports/temporary comparison docs/
+belief_state_trader/reports/5512-Final-Report-Group2.pdf
