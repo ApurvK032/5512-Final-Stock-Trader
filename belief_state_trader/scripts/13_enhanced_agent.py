@@ -71,7 +71,7 @@ def main():
     # 2. Run best enhanced agent from sweep
     # ------------------------------------------------------------------
     print("\n" + "=" * 70)
-    print("2. BEST AGENT vs ALL STRATEGIES")
+    print("2. SELECTED ENHANCED AGENT vs ALL STRATEGIES")
     print("=" * 70)
 
     # Run the best config from sweep using its variant type

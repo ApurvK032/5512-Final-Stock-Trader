@@ -1,75 +1,46 @@
 # Belief State Trader
 
-Algorithm pipeline for the CSCI 5512 final project.
+This folder contains the implementation for the CSCI 5512 Group 2 final project, **Bayesian Belief-State Trading Agent for Autonomous Portfolio Management**.
 
-The project models S&P 500 trading as a decision problem under uncertainty. The
-main idea is to learn hidden market regimes from historical data, then later use
-Bayesian belief updates to reason about which regime the market is likely in.
+The pipeline models S&P 500 trading as a partially observable decision problem. The true market regime is hidden, so the agent learns a Gaussian HMM from historical data, updates Bayesian beliefs over hidden regimes each day, and uses those beliefs to choose a long-only portfolio weight.
 
-Current status: the data pipeline, data checks, real-return calculation, three
-planned baselines, basic HMM parameter estimation, Bayesian belief updates, and
-a basic belief-based portfolio strategy are implemented. The scripts now also
-produce a combined comparison table and simple result plots.
-
-## Current Workflow
+## Workflow Summary
 
 ```text
-S&P 500 CSV files
+S&P 500 train/test CSVs
     |
     v
-load train/test data
+data loading and real-return calculation
     |
     v
-check data quality and feature statistics
+baseline strategies
     |
     v
-compute real log returns from Adj_Close
+K=3 Gaussian HMM regime fitting
     |
     v
-run three planned baselines
+Bayesian belief updates on test data
     |
     v
-fit K=3 Gaussian HMM on training features
+belief-to-portfolio allocation
     |
     v
-update daily test-period regime beliefs
+transaction-cost-aware backtesting
     |
     v
-convert beliefs into portfolio weights
-    |
-    v
-compare all strategies and create plots
+model selection, ablations, pgmpy/DBN check, plots, and report tables
 ```
 
-## Folder Structure
+## Data Split
 
-```text
-belief_state_trader/
-|-- data/        # train/test CSV files
-|-- notes/       # explanation notes and workflow overview
-|-- results/     # generated summaries, fitted HMM output, and plots
-|-- scripts/     # runnable project steps
-|-- src/         # reusable Python modules
-|-- README.md
-```
+| Split | Date Range | Use |
+|---|---|---|
+| Training | 2015-01-02 to 2020-12-31 | HMM fitting and regime return/risk estimation |
+| Main Test | 2021-01-04 to 2025-12-30 | Base strategy and baseline evaluation |
+| Validation | 2021-2022 | Enhanced strategy parameter selection |
+| Held-out Check | 2023-2025 | Final enhanced strategy validation |
 
-## Data
-
-Local data files:
-
-```text
-data/sp500_train.csv
-data/sp500_test.csv
-```
-
-Current data split:
-
-| Split | Date Range | Rows |
-|---|---|---:|
-| Training | 2015-01-02 to 2020-12-31 | 1511 |
-| Test | 2021-01-04 to 2025-12-30 | 1254 |
-
-Model feature columns:
+The HMM uses standardized feature columns:
 
 ```text
 Log_Return
@@ -77,244 +48,119 @@ Volume
 Volatility
 ```
 
-For backtesting/performance calculations, the pipeline computes:
+Backtesting uses separately computed real log returns from adjusted close prices:
 
 ```text
 Real_Log_Return = log(Adj_Close_t / Adj_Close_{t-1})
 ```
 
-This is separate from the CSV's `Log_Return` column, which appears to be a
-standardized model feature.
+## Run
 
-## Implemented Baselines
+From this folder:
 
-The original project plan includes three baselines. All three are implemented.
-
-| Baseline | Meaning |
-|---|---|
-| Buy and Hold | Always fully invested in the S&P 500. |
-| Moving Average Crossover 50/200 | Invest when 50-day moving average is above 200-day moving average. |
-| Single-Regime No-Belief | Uses one training-set mean/variance estimate and one fixed test-period weight. |
-
-Current test-period results:
-
-| Strategy | Total Return | Sharpe | Max Drawdown |
-|---|---:|---:|---:|
-| Buy and Hold | 85.04% | 0.739 | -25.43% |
-| Moving Average Crossover 50/200 | 33.19% | 0.477 | -19.90% |
-| Single-Regime No-Belief | 55.12% | 0.739 | -18.88% |
-
-## HMM Parameter Estimation
-
-The first algorithm task from the project note is implemented:
-
-```text
-Implement HMM parameter estimation (hmmlearn)
-```
-
-Current HMM setup:
-
-```text
-library: hmmlearn
-model: GaussianHMM
-hidden states: K = 3
-features: Log_Return, Volume, Volatility
-training split only
-```
-
-Current HMM training result:
-
-```text
-best seed: 42
-training log-likelihood: -3497.4771
-```
-
-Learned states sorted by annualized mean return:
-
-| State | Frequency | Annualized Mean Return | Annualized Volatility | Interpretation |
-|---|---:|---:|---:|---|
-| 0 | 4.0% | -70.87% | 64.71% | Bear-like/high-risk state |
-| 1 | 31.3% | 6.86% | 20.69% | Sideways/moderate state |
-| 2 | 64.7% | 16.55% | 9.06% | Bull-like/lower-risk state |
-
-## Bayesian Belief Updates
-
-The second algorithm task from the project note is implemented:
-
-```text
-Implement Bayesian belief updates
-```
-
-Current belief update setup:
-
-```text
-input model: fitted Gaussian HMM
-input observations: test-set Log_Return, Volume, Volatility
-initial belief: uniform over states
-output: daily probability of each hidden state
-```
-
-Output:
-
-```text
-results/test_beliefs.csv
-```
-
-The output contains:
-
-```text
-Date
-state_0_prob
-state_1_prob
-state_2_prob
-most_likely_state
-```
-
-## Belief-Based Strategy
-
-The basic portfolio strategy converts regime beliefs into one daily investment
-weight between 0 and 1.
-
-Current setup:
-
-```text
-state return/risk estimates: learned from training data
-risk aversion: 2.0
-weight range: 0 to 1
-```
-
-Current test-period result:
-
-| Strategy | Total Return | Sharpe | Max Drawdown | Average Weight |
-|---|---:|---:|---:|---:|
-| Bayesian Belief-State | 21.57% | 0.432 | -15.11% | 0.611 |
-
-Outputs:
-
-```text
-results/bayesian_strategy_summary.csv
-results/bayesian_strategy_daily.csv
-```
-
-## Strategy Comparison And Plots
-
-The final skeleton step combines the strategy summaries and creates simple
-visual outputs.
-
-Outputs:
-
-```text
-results/strategy_comparison.csv
-results/equity_curves.png
-results/belief_probabilities.png
-```
-
-## How To Run
-
-Run the full end-to-end skeleton:
-
-```bash
+```powershell
 python scripts/run_all.py
 ```
 
-Or run individual scripts from the `belief_state_trader` folder.
+Optional compile check:
 
-
-Data summary:
-
-```bash
-python scripts/01_data_summary.py
+```powershell
+python -m compileall scripts src
 ```
 
-Baselines:
+Install dependencies from the repository root:
 
-```bash
-python scripts/02_buy_hold_baseline.py
-python scripts/03_moving_average_baseline.py
-python scripts/04_single_regime_baseline.py
+```powershell
+python -m pip install -r requirements.txt
 ```
 
-HMM fitting:
+## Numbered Scripts
 
-```bash
-python scripts/05_fit_hmm.py
-```
+| Script | Purpose |
+|---|---|
+| `00_data_collection.ipynb` | Data download/reference notebook |
+| `01_data_summary.py` | Data checks and summary |
+| `02_buy_hold_baseline.py` | Buy-and-Hold baseline |
+| `03_moving_average_baseline.py` | Moving Average 50/200 baseline |
+| `04_single_regime_baseline.py` | Single-Regime No-Belief baseline |
+| `05_fit_hmm.py` | Fit the main K=3 Gaussian HMM |
+| `05a_model_selection.py` | Sweep HMM model sizes and covariance options |
+| `06_bayesian_belief.py` | Generate daily Bayesian regime beliefs |
+| `07_bayesian_strategy.py` | Run the base Bayesian portfolio strategy |
+| `08_strategy_comparison.py` | Compare base strategies |
+| `09_regime_and_calibration.py` | Regime diagnostics and belief calibration |
+| `10_ablation_studies.py` | Feature, entropy, and risk-aversion ablations |
+| `11_pgmpy_dbn.py` | `pgmpy` Dynamic Bayesian Network representation check |
+| `11a_pgmpy_exploration.py` | Additional pgmpy/HMM belief comparison |
+| `12_all_plots.py` | Generate report-ready plots |
+| `13_enhanced_agent.py` | Enhanced bear-defense strategy experiments |
+| `14_validate_enhanced_strategy.py` | Validation-selected enhanced strategy and held-out check |
+| `run_all.py` | Runs the full pipeline in order |
 
-Bayesian belief update and strategy:
+## Reusable Modules
 
-```bash
-python scripts/06_bayesian_belief.py
-python scripts/07_bayesian_strategy.py
-```
+| Module | Purpose |
+|---|---|
+| `src/data.py` | Data loading, date parsing, sorting, and real-return calculation |
+| `src/backtest.py` | Equity curves, returns, volatility, Sharpe, Sortino, drawdown, Calmar |
+| `src/baselines.py` | Baseline trading rules |
+| `src/hmm_model.py` | Gaussian HMM fitting helpers |
+| `src/belief_update.py` | Log-domain Bayesian filtering and belief entropy |
+| `src/portfolio.py` | Belief-to-weight logic and transaction-cost calculations |
+| `src/ablations.py` | Feature, entropy, and risk-aversion experiment helpers |
+| `src/dbn_model.py` | Dynamic Bayesian Network representation utilities |
+| `src/enhanced_agent.py` | Enhanced strategy rules |
+| `src/evaluation.py` | Additional evaluation helpers |
+| `src/plots.py` | Plot generation |
 
-Comparison and plots:
+## Main Results
 
-```bash
-python scripts/08_strategy_comparison.py
-python scripts/09_regime_and_calibration.py
-python scripts/10_ablation_studies.py
-python scripts/11_pgmpy_dbn.py
-python scripts/11a_pgmpy_exploration.py
-python scripts/12_all_plots.py
-python scripts/13_enhanced_agent.py
-```
+Base strategy comparison on 2021-2025:
 
-## Main Files
+| Strategy | Total Return | Sharpe | Sortino | Max Drawdown |
+|---|---:|---:|---:|---:|
+| Buy and Hold | 85.04% | 0.729 | 0.983 | -25.43% |
+| Moving Average 50/200 | 33.19% | 0.477 | 0.499 | -19.90% |
+| Single-Regime No-Belief | 55.12% | 0.729 | 0.983 | -18.88% |
+| Bayesian Belief-State | 21.57% | 0.432 | 0.561 | -15.11% |
 
-Reusable modules:
+Held-out enhanced strategy check on 2023-2025:
+
+| Strategy | Total Return | Sharpe | Sortino | Max Drawdown |
+|---|---:|---:|---:|---:|
+| Enhanced Bear-Defense Bayesian | 60.78% | 1.227 | 1.573 | -15.85% |
+
+## Main Outputs
+
+Important generated files:
 
 ```text
-src/data.py       # data loading and real-return calculation
-src/backtest.py   # equity curve and performance metrics
-src/baselines.py  # baseline strategy logic
-src/hmm_model.py  # Gaussian HMM fitting helpers
-src/belief_update.py  # daily regime probability updates
-src/portfolio.py      # belief-to-weight strategy logic
-src/plots.py          # simple result plots
-```
-
-Runnable scripts:
-
-```text
-scripts/01_data_summary.py
-scripts/02_buy_hold_baseline.py
-scripts/03_moving_average_baseline.py
-scripts/04_single_regime_baseline.py
-scripts/05_fit_hmm.py
-scripts/06_bayesian_belief.py
-scripts/07_bayesian_strategy.py
-scripts/08_strategy_comparison.py
-scripts/09_regime_and_calibration.py
-scripts/10_ablation_studies.py
-scripts/11_pgmpy_dbn.py
-scripts/11a_pgmpy_exploration.py
-scripts/12_all_plots.py
-scripts/13_enhanced_agent.py
-scripts/run_all.py
-```
-
-Important outputs:
-
-```text
-results/buy_hold_summary.csv
-results/moving_average_summary.csv
-results/single_regime_summary.csv
-results/hmm_model.pkl
-results/hmm_state_summary.csv
-results/hmm_transition_matrix.csv
-results/hmm_training_summary.txt
-results/test_beliefs.csv
-results/bayesian_strategy_summary.csv
-results/bayesian_strategy_daily.csv
 results/strategy_comparison.csv
+results/enhanced_validation_comparison.csv
+results/model_selection.csv
+results/ablation_features.csv
+results/ablation_entropy.csv
+results/ablation_risk_aversion.csv
+results/belief_calibration.csv
+results/performance_by_period.csv
+results/hmm_vs_dbn_comparison.csv
+results/dbn_belief_comparison.csv
 results/equity_curves.png
-results/belief_probabilities.png
+results/enhanced_equity_curves.png
+results/drawdown_comparison.png
+results/model_selection.png
+results/calibration_plot.png
 ```
 
-## Notes
-
-Start here for the team-facing explanation:
+Final report:
 
 ```text
-notes/workflow_overview.md
+reports/belief_state_trader_group2_report.tex
+reports/belief_state_trader_group2_report.pdf
 ```
+
+## Interpretation
+
+The base Bayesian agent is useful as a clean belief-state baseline: it lowers volatility and drawdown but is too conservative and trades too often. The enhanced bear-defense strategy keeps the belief-state idea but uses defensive exposure changes more selectively, which improves held-out risk-adjusted performance.
+
+The project should be framed as a risk-aware belief-state trading system, not as a claim that Bayesian trading always beats Buy-and-Hold in raw return.

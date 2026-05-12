@@ -148,10 +148,11 @@ def main():
     # ------------------------------------------------------------------
     # Discretise Real_Log_Return using training-set quantile edges only
     # ------------------------------------------------------------------
-    train_lr = train["Real_Log_Return"].dropna().to_numpy()
+    train_lr_for_edges = train["Real_Log_Return"].dropna().to_numpy()
+    train_lr = train["Real_Log_Return"].reindex(train_features.index).fillna(0.0).to_numpy()
     test_lr  = test["Real_Log_Return"].reindex(test_features.index).fillna(0.0).to_numpy()
 
-    edges = np.percentile(train_lr, np.linspace(0, 100, N_BINS + 1))
+    edges = np.percentile(train_lr_for_edges, np.linspace(0, 100, N_BINS + 1))
     edges[0]  = -np.inf
     edges[-1] =  np.inf
 

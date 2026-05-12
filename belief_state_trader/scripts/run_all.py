@@ -26,8 +26,10 @@ SCRIPT_ORDER = [
     "09_regime_and_calibration.py",
     "10_ablation_studies.py",
     "11_pgmpy_dbn.py",
+    "11a_pgmpy_exploration.py",
     "12_all_plots.py",
     "13_enhanced_agent.py",
+    "14_validate_enhanced_strategy.py",
 ]
 
 
