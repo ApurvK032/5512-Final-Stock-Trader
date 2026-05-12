@@ -151,7 +151,7 @@ def plot_drawdown_comparison(
 
 def plot_model_selection(model_selection_df: pd.DataFrame, output_path: Path) -> None:
     """BIC/AIC vs number of states with delta annotations."""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 5.4))
 
     ax1.plot(model_selection_df["n_states"], model_selection_df["bic"],
              "o-", label="BIC", linewidth=2, markersize=8)
@@ -174,7 +174,7 @@ def plot_model_selection(model_selection_df: pd.DataFrame, output_path: Path) ->
     ax2.set_xticks(model_selection_df["n_states"].iloc[1:].tolist())
     ax2.grid(True, alpha=0.3)
 
-    fig.tight_layout()
+    fig.subplots_adjust(wspace=0.34, left=0.07, right=0.98, bottom=0.14, top=0.88)
     fig.savefig(output_path, dpi=150)
     plt.close(fig)
 

@@ -1,30 +1,4 @@
-"""Run the enhanced Bayesian agent pipeline and benchmark it against baselines.
-
-This script executes a full enhanced-strategy experiment workflow on the
-train/test split. It first runs a parameter sweep across enhanced-agent
-variants, selects the best configuration by Sharpe ratio, then compares that
-configuration against baseline strategies and the original Bayesian agent.
-
-Main stages:
-1. Full parameter sweep over enhanced variants and hyperparameters.
-2. Best-config backtest against buy-and-hold, moving-average, single-regime,
-   and original Bayesian strategies.
-3. Turnover/cost diagnostics from weight changes.
-4. Performance breakdown across manually labeled market periods.
-5. Visualization of equity curves, drawdowns, and allocation behavior.
-
-Primary outputs:
-- results/enhanced_agent_sweep.csv
-- results/enhanced_comparison.csv
-- results/crisis_periods_drawdown.csv
-- results/enhanced_equity_curves.png
-- results/enhanced_drawdowns.png
-- results/enhanced_weight_comparison.png
-
-Run from the belief_state_trader folder:
-
-    python scripts/13_enhanced_agent.py
-"""
+"""Run the enhanced Bayesian strategy sweep."""
 from __future__ import annotations
 
 import sys

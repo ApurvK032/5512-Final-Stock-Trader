@@ -1,9 +1,4 @@
-"""Run the Single-Regime No-Belief baseline on the test split.
-
-Run from the belief_state_trader folder:
-
-    python scripts/04_single_regime_baseline.py
-"""
+"""Run the Single-Regime No-Belief baseline."""
 from __future__ import annotations
 
 import sys

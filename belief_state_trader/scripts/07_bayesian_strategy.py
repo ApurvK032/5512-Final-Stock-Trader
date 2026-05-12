@@ -1,18 +1,4 @@
-"""Backtest the baseline Bayesian belief-state portfolio strategy on test data.
-
-Loads a fitted HMM, estimates per-state return moments from the
-training split, computes daily posterior regime beliefs on the test split, and
-maps those beliefs to portfolio weights via a mean-variance style allocation
-rule with fixed risk aversion.
-
-Generated outputs:
-- results/bayesian_strategy_summary.csv: aggregate performance metrics
-- results/bayesian_strategy_daily.csv: daily weights and strategy returns
-
-Run from the belief_state_trader folder:
-
-    python scripts/07_bayesian_strategy.py
-"""
+"""Backtest the baseline Bayesian belief-state strategy."""
 from __future__ import annotations
 
 import pickle

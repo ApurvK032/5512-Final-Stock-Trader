@@ -1,9 +1,4 @@
-"""Run the Buy and Hold baseline on the test split.
-
-Run from the belief_state_trader folder:
-
-    python scripts/02_buy_hold_baseline.py
-"""
+"""Run the Buy and Hold baseline."""
 from __future__ import annotations
 
 import sys

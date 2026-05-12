@@ -1,16 +1,4 @@
-"""Validate the enhanced Bayesian strategy on a held-out period.
-
-This script keeps Nicole's enhanced strategy logic, but separates parameter
-selection from final evaluation:
-
-1. Fit the enhanced HMM on 2015-2020 training data only.
-2. Select enhanced strategy parameters on 2021-2022 validation data.
-3. Report the selected strategy on 2023-2025 held-out data.
-
-Run from the belief_state_trader folder:
-
-    python scripts/14_validate_enhanced_strategy.py
-"""
+"""Select the enhanced strategy on validation data and test it held-out."""
 from __future__ import annotations
 
 import sys
@@ -43,7 +31,7 @@ def date_window(series: pd.Series, start_date: str, end_date: str) -> pd.Series:
 
 
 def enhanced_configs() -> list[dict]:
-    """Small grid based on the strongest enhanced strategy ideas."""
+    """Return the enhanced strategy grid."""
     configs: list[dict] = []
 
     for bull_threshold in [0.3, 0.5]:
@@ -154,7 +142,7 @@ def evaluate_configs(
     state_roles: dict,
     test_df: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Evaluate all enhanced configs on validation, held-out, and full test windows."""
+    """Evaluate each enhanced config on the validation and test windows."""
     rows = []
     windows = [
         ("validation_2021_2022", VALIDATION_START, VALIDATION_END),

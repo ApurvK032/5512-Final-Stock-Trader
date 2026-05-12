@@ -65,6 +65,7 @@ Runnable numbered pipeline steps.
 | `12_all_plots.py` | Plot generation |
 | `13_enhanced_agent.py` | Enhanced strategy full-period experiments |
 | `14_validate_enhanced_strategy.py` | Validation-selected enhanced strategy and held-out check |
+| `15_bootstrap_confidence_intervals.py` | Bootstrap Sharpe confidence intervals for held-out returns |
 | `run_all.py` | End-to-end runner |
 
 ## `results/`
@@ -78,6 +79,7 @@ Important CSVs:
 | `strategy_comparison.csv` | Main base strategy comparison |
 | `enhanced_validation_comparison.csv` | Held-out enhanced strategy comparison |
 | `enhanced_validation_selected.csv` | Selected enhanced configuration |
+| `bootstrap_sharpe_ci.csv` | Bootstrap Sharpe confidence intervals for held-out returns |
 | `model_selection.csv` | HMM model-selection results |
 | `ablation_features.csv` | Feature ablation results |
 | `ablation_entropy.csv` | Entropy strategy ablation results |
@@ -103,9 +105,8 @@ Important plots:
 
 ## `reports/`
 
-Final written report materials.
+Final written report material.
 
 | File | Purpose |
 |---|---|
-| `belief_state_trader_group2_report.tex` | Final LaTeX source |
-| `belief_state_trader_group2_report.pdf` | Final compiled PDF |
+| `Final_Report.pdf` | Final compiled PDF |

@@ -1,16 +1,4 @@
-"""Infer daily hidden-regime beliefs for the test split using the fitted HMM.
-
-Loads the previously trained HMM artifact from results/hmm_model.pkl,
-applies Bayesian filtering to test-period features, and writes one posterior
-probability vector per day.
-
-Generated output:
-- results/test_beliefs.csv: date-indexed state probabilities and related columns
-
-Run from the belief_state_trader folder:
-
-    python scripts/06_bayesian_belief.py
-"""
+"""Infer daily regime beliefs on the test split."""
 from __future__ import annotations
 
 import pickle

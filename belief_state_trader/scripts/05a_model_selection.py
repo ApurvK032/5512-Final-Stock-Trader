@@ -1,18 +1,4 @@
-"""Run HMM model selection using AIC and BIC.
-
-This script compares Gaussian HMMs with different numbers of hidden states.
-It is intended to help justify the final choice of K for the trading model.
-
-Lower AIC/BIC means a better balance between model fit and complexity.
-
-Run from the belief_state_trader folder:
-
-    python scripts/05a_model_selection.py
-
-Outputs:
-    results/model_selection.csv
-    results/model_selection.png
-"""
+"""Run HMM model selection with AIC and BIC."""
 from __future__ import annotations
 
 import sys
@@ -37,16 +23,7 @@ N_ITER = 200
 
 
 def count_free_params(n_states: int, n_features: int) -> int:
-    """Count free parameters in a full-covariance Gaussian HMM.
-
-    Includes:
-    - Initial state probabilities: K - 1
-    - Transition matrix: K * (K - 1)
-    - Means: K * D
-    - Full covariance matrices: K * D * (D + 1) / 2
-
-    where K = number of states and D = number of features.
-    """
+    """Count free parameters in a full-covariance Gaussian HMM."""
     start_probs = n_states - 1
     transitions = n_states * (n_states - 1)
     means = n_states * n_features

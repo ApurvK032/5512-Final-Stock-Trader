@@ -1,33 +1,4 @@
-"""Evaluate regime quality, belief calibration, and period-specific performance.
-
-This script is an evaluation layer on top of the fitted HMM and Bayesian belief
-pipeline. It measures whether inferred regimes align with stress periods,
-whether belief probabilities are calibrated to realized returns, and how
-different strategies behave across market conditions.
-
-Main analyses:
-1. Drawdown-based crisis detection from test-period prices.
-2. Manual event labeling and date-to-period assignment.
-3. Regime detection accuracy for the inferred bear state.
-4. Belief calibration diagnostics against realized returns.
-5. Strategy performance by labeled period (transition-aware comparison).
-6. Belief entropy behavior across periods (uncertainty analysis).
-
-Required inputs:
-- results/hmm_model.pkl
-- train/test data loaded via src.data
-
-Generated outputs:
-- results/crisis_periods_drawdown.csv
-- results/regime_detection_accuracy.csv
-- results/belief_calibration.csv
-- results/performance_by_period.csv
-- results/entropy_by_period.csv
-
-Run from the belief_state_trader folder:
-
-    python scripts/09_regime_and_calibration.py
-"""
+"""Evaluate regimes, belief calibration, and period-level performance."""
 from __future__ import annotations
 
 import pickle
@@ -51,7 +22,7 @@ from src import (
 
 
 def build_strategy_returns(fitted, train, test, state_moments):
-    """Reconstruct all strategy return series for period analysis."""
+    """Rebuild strategy returns for period analysis."""
     buy_hold = baselines.buy_and_hold_returns(test["Real_Log_Return"])
     ma = baselines.moving_average_crossover_returns(
         prices=test["Adj_Close"],
@@ -75,7 +46,7 @@ def build_strategy_returns(fitted, train, test, state_moments):
 
 
 def identify_bear_state(fitted, train):
-    """Determine which HMM state has the lowest mean return (bear)."""
+    """Return the HMM state with the lowest mean return."""
     train_features = data.feature_matrix(train, fitted.feature_columns)
     valid = train["Real_Log_Return"].notna()
     states = fitted.model.predict(train_features.loc[valid].to_numpy(dtype=float))

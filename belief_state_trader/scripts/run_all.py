@@ -1,9 +1,4 @@
-"""Run the full end-to-end skeleton pipeline.
-
-Run from the belief_state_trader folder:
-
-    python scripts/run_all.py
-"""
+"""Run the full project pipeline."""
 from __future__ import annotations
 
 import subprocess
@@ -30,6 +25,7 @@ SCRIPT_ORDER = [
     "12_all_plots.py",
     "13_enhanced_agent.py",
     "14_validate_enhanced_strategy.py",
+    "15_bootstrap_confidence_intervals.py",
 ]
 
 

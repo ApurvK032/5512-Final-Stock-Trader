@@ -1,30 +1,4 @@
-"""Construct, validate, and backtest a DBN view of the fitted HMM pipeline.
-
-This script connects the Gaussian HMM regime model to an equivalent Dynamic
-Bayesian Network (DBN) representation and evaluates whether both approaches
-produce consistent belief trajectories and similar trading performance.
-
-Workflow stages:
-1. Build a DBN from fitted HMM parameters and export a structure summary.
-2. Run DBN-style forward beliefs on test features.
-3. Compare HMM-filter beliefs and DBN-filter beliefs quantitatively.
-4. Backtest a belief-to-weight strategy using DBN beliefs and benchmark it
-   against the original HMM belief-based strategy.
-
-Required inputs:
-- results/hmm_model.pkl (trained Gaussian HMM artifact)
-- data loaded through src.data helpers (train/test splits)
-
-Generated outputs:
-- results/dbn_structure.json
-- results/dbn_beliefs.csv
-- results/hmm_vs_dbn_comparison.csv
-- results/hmm_vs_dbn_backtest.csv
-
-Run from the belief_state_trader folder:
-
-    python scripts/11_pgmpy_dbn.py
-"""
+"""Compare the HMM belief filter with a pgmpy DBN version."""
 from __future__ import annotations
 
 import json

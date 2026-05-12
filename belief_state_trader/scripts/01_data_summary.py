@@ -1,9 +1,4 @@
-"""Print a basic summary of the S&P 500 train/test data.
-
-Run from the belief_state_trader folder:
-
-    python scripts/01_data_summary.py
-"""
+"""Print a basic summary of the train/test data."""
 from __future__ import annotations
 
 import sys
@@ -18,7 +13,7 @@ from src import data
 
 
 def print_split_summary(name: str, df):
-    """Print basic shape, date, missing-value, and feature-stat information."""
+    """Print split shape, dates, missing values, and feature stats."""
     with_returns = data.add_real_log_return(df)
 
     print(f"\n{name}")
