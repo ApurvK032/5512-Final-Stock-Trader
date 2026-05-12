@@ -117,7 +117,7 @@ belief_state_trader/results/calibration_plot.png
 Final report:
 
 ```text
-belief_state_trader/reports/belief_state_trader_group2_report.pdf
+belief_state_trader/reports/Final_Report.pdf
 ```
 
 ## Reproducibility Notes

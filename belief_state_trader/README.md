@@ -157,7 +157,7 @@ results/calibration_plot.png
 Final report PDF:
 
 ```text
-reports/belief_state_trader_group2_report.pdf
+reports/Final_Report.pdf
 ```
 
 ## Interpretation

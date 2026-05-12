@@ -109,4 +109,4 @@ Final written report material.
 
 | File | Purpose |
 |---|---|
-| `belief_state_trader_group2_report.pdf` | Final compiled PDF |
+| `Final_Report.pdf` | Final compiled PDF |
